@@ -1,3 +1,5 @@
+import os
+
 import uuid
 from datetime import datetime
 
@@ -125,7 +127,14 @@ class UpdateMemory(TypedDict):
     update_type: Literal['user', 'todo', 'instructions']
 
 # Initialize the model
-model = ChatOpenAI(model="gpt-4o", temperature=0)
+model = ChatOpenAI(
+    model=os.environ["LLM_MODEL"],
+    base_url=os.environ["LLM_BASE_URL"],
+    api_key=os.environ.get("LLM_API_KEY", "not-needed"),
+    temperature=0,
+    max_retries=3,
+    timeout=120,
+)
 
 ## Create the Trustcall extractors for updating the user profile and ToDo list
 profile_extractor = create_extractor(

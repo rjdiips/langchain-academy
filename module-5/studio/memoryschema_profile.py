@@ -1,3 +1,5 @@
+import os
+
 from pydantic import BaseModel, Field
 
 from trustcall import create_extractor
@@ -10,7 +12,14 @@ from langgraph.store.base import BaseStore
 import configuration
 
 # Initialize the LLM
-model = ChatOpenAI(model="gpt-4o", temperature=0) 
+model = ChatOpenAI(
+    model=os.environ["LLM_MODEL"],
+    base_url=os.environ["LLM_BASE_URL"],
+    api_key=os.environ.get("LLM_API_KEY", "not-needed"),
+    temperature=0,
+    max_retries=3,
+    timeout=120,
+) 
 
 # Schema 
 class UserProfile(BaseModel):

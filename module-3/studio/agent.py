@@ -1,3 +1,5 @@
+import os
+
 from langchain_core.messages import SystemMessage
 from langchain_openai import ChatOpenAI
 
@@ -34,7 +36,14 @@ def divide(a: int, b: int) -> float:
 tools = [add, multiply, divide]
 
 # Define LLM with bound tools
-llm = ChatOpenAI(model="gpt-4o")
+llm = ChatOpenAI(
+    model=os.environ["LLM_MODEL"],
+    base_url=os.environ["LLM_BASE_URL"],
+    api_key=os.environ.get("LLM_API_KEY", "not-needed"),
+    temperature=0,
+    max_retries=3,
+    timeout=120,
+)
 llm_with_tools = llm.bind_tools(tools)
 
 # System message

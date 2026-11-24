@@ -1,3 +1,5 @@
+import os
+
 import operator
 from typing import Annotated
 from typing_extensions import TypedDict
@@ -12,7 +14,14 @@ from langchain_openai import ChatOpenAI
 
 from langgraph.graph import StateGraph, START, END
 
-llm = ChatOpenAI(model="gpt-4o", temperature=0) 
+llm = ChatOpenAI(
+    model=os.environ["LLM_MODEL"],
+    base_url=os.environ["LLM_BASE_URL"],
+    api_key=os.environ.get("LLM_API_KEY", "not-needed"),
+    temperature=0,
+    max_retries=3,
+    timeout=120,
+) 
 
 class State(TypedDict):
     question: str
